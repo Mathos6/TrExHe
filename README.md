@@ -16,6 +16,11 @@
 
 ## Prerequisites & Setup
 
+0. **Go inside theproject**
+   ```bash
+   cd TrExHe
+   ```
+   
 1. **Install dependencies (Debian/Ubuntu):**
    ```bash
    sudo apt update && sudo apt install -y build-essential cmake ffmpeg golang git
@@ -23,11 +28,7 @@
 		
 2. Build whisper.cpp
    ```bash
-   cd whisper.cpp
-   sh ./models/download-ggml-model.sh small
-   cmake -B build
-   cmake --build build -j --config Release
-   cd ..
+   ./setup/build_whisper
    ```
 
 
