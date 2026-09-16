@@ -1,0 +1,14 @@
+# Binaires et dépendances
+whisper.cpp/
+bin/
+tmp/
+
+# Modèles et fichiers audio
+*.bin
+*.wav
+*.ogg
+*.m4a
+*.mp3
+
+# Variables d'environnement / Clés API
+.env
