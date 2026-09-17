@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>TrExHe</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Abel&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ===================== ECRAN 1 : ACCUEIL ===================== -->
+<main id="screen-home" class="screen active">
+
+  <header class="home-head">
+    <h1>TrExHe</h1>
+    <p class="subtitle">Mes transcriptions</p>
+  </header>
+
+  <!-- Liste des transcriptions (visible quand il y en a) -->
+  <section id="home-list" class="home-list">
+
+    <article class="entry" data-filename="Biologie_moleculaire_ch4.mp3">
+      <span class="entry-date">12 mars</span>
+      <p class="entry-title">Biologie moléculaire — ch.4</p>
+      <p class="entry-meta">48 min</p>
+      <span class="status done">Terminé</span>
+    </article>
+
+    <article class="entry" data-filename="TD_thermo_10mars.m4a">
+      <span class="entry-date">10 mars</span>
+      <p class="entry-title">TD Thermodynamique</p>
+      <p class="entry-meta">1 h 12</p>
+      <span class="status progress">En cours</span>
+    </article>
+
+    <article class="entry" data-filename="Histoire_des_sciences.wav">
+      <span class="entry-date">6 mars</span>
+      <p class="entry-title">Histoire des sciences</p>
+      <p class="entry-meta">55 min</p>
+      <span class="status done">Terminé</span>
+    </article>
+
+  </section>
+
+  <!-- Etat vide (masqué par défaut ; on l'affiche si home-list est vide via JS) -->
+  <section id="home-empty" class="empty-state" hidden>
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4">
+      <path d="M9 18V6l9-2v12M9 18a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM18 16a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
+    </svg>
+    <p>Rien à voir ici pour l'instant.</p>
+    <p class="sub">Ajoutez un enregistrement pour lancer une transcription.</p>
+  </section>
+
+  <!-- Bouton flottant "+" -->
+  <button id="fab" class="fab" aria-label="Ajouter un enregistrement">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <path d="M12 5v14M5 12h14"/>
+    </svg>
+  </button>
+
+  <!-- Bulle flottante de téléversement (masquée par défaut) -->
+  <section id="upload-bubble" class="upload-bubble">
+    <button id="upload-close" class="close" aria-label="Fermer">x</button>
+    <h3>Nouvel enregistrement</h3>
+    <label class="dropzone" for="file-input">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M12 16V4M7 9l5-5 5 5M4 20h16"/>
+      </svg>
+      <strong>Glisser un fichier</strong>
+      ou toucher pour parcourir
+      <span class="filetypes">MP3 · WAV · M4A</span>
+    </label>
+    <input id="file-input" type="file" accept=".mp3,.wav,.m4a" hidden>
+  </section>
+
+</main>
+
+<!-- ===================== ECRAN 2 : CONFIGURATION ===================== -->
+<main id="screen-config" class="screen">
+
+  <header class="config-top">
+    <button id="back-btn" class="back-arrow" aria-label="Retour">←</button>
+    <div class="file-chip">
+      <span id="config-filename" class="name">fichier.m4a</span>
+      <span class="size">68 Mo</span>
+    </div>
+  </header>
+
+  <section class="config-body">
+
+    <div class="field">
+      <label class="title" for="context-input">Contexte</label>
+      <textarea id="context-input" placeholder="Ex. cours de biologie moléculaire, TD sur la thermodynamique…"></textarea>
+      <p class="desc">Aide l'IA à mieux comprendre le vocabulaire et à structurer le cours.</p>
+    </div>
+
+    <div class="toggle-row">
+      <button class="checkbox checked" data-toggle="diarisation" aria-pressed="false"></button>
+      <div class="toggle-text">
+        <p class="title">Diarisation</p>
+        <p class="desc">Distinguer les personnes qui parlent — utile pour un dialogue ou des questions/réponses.</p>
+      </div>
+    </div>
+
+    <div class="toggle-row">
+      <button class="checkbox" data-toggle="cleanup" aria-pressed="false"></button>
+      <div class="toggle-text">
+        <p class="title">Nettoyer l'audio</p>
+        <p class="desc">À cocher si l'enregistrement a été fait dans un environnement bruyant.</p>
+      </div>
+    </div>
+
+  </section>
+
+  <footer class="config-footer">
+    <button class="btn-primary" id="start-transcribe-btn">Lancer la transcription</button>
+  </footer>
+
+</main>
+
+
+<!-- ===================== ECRAN 3 : LECTURE ===================== -->
+<main id="screen-read" class="screen">
+
+  <header class="read-top">
+    <button id="read-back-btn" class="back-arrow" aria-label="Retour">←</button>
+    <span id="read-filename" class="file-chip"></span>
+  </header>
+
+  <section id="read-content" class="read-content">
+    <!-- Le contenu Markdown converti est injecté ici par script.js -->
+  </section>
+
+</main>
+
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

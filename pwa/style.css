@@ -1,0 +1,382 @@
+:root{
+  --white: #FFFFFF;
+  --black: #111111;
+  --gold: #AA8439;
+  --navy: #2E4172;
+}
+
+*{ box-sizing:border-box; }
+html,body{ margin:0; padding:0; height:100%; }
+
+body{
+  font-family:'Abel', sans-serif;
+  color:var(--black);
+  background:var(--white);
+}
+
+.screen{
+  display:none;
+  flex-direction:column;
+  min-height:100vh;
+  position:relative;
+  max-width:480px;
+  margin:0 auto;
+  background:var(--white);
+}
+.screen.active{ display:flex; }
+
+/* ===================== ECRAN 1 : ACCUEIL ===================== */
+.home-head{
+  padding:28px 24px 22px;
+}
+.home-head h1{
+  font-weight:550;
+  font-size:30px;
+  margin:0;
+  margin-bottom: 24px;
+  color:var(--gold);
+  letter-spacing:.01em;
+}
+.home-head .subtitle{
+  font-size:24px;
+  color:#777;
+  margin:4px 0 0;
+}
+.home-list{
+  flex:1;
+  padding:6px 20px 110px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+.entry{
+  border:0.5px solid var(--black);
+  border-radius:14px;
+  padding:16px 18px;
+  position:relative;
+  cursor:pointer;
+  background-color: var(--white, #ffffff); /* Fond opaque obligatoire pour l'effet de relief */
+
+  /* Effet de volume (ombre portée soft & moderne) */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.entry-date{
+  position:absolute;
+  top:14px;
+  right:18px;
+  font-size:13px;
+  color:var(--navy);
+}
+.entry-title{
+  font-size:19px;
+  margin:0 60px 6px 0;
+}
+.entry-meta{
+  font-size:13px;
+  color:#666;
+  margin:0;
+}
+.status{
+  display:inline-block;
+  margin-top:10px;
+  font-size:13px;
+}
+.status.done{ color:var(--navy); }
+.status.progress{ color:var(--gold); }
+.status::before{
+  content:'';
+  display:inline-block;
+  width:6px; height:6px;
+  border-radius:50%;
+  background:currentColor;
+  margin-right:6px;
+  position:relative;
+  top:-1px;
+}
+
+.empty-state{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  gap:10px;
+  padding:0 40px 110px;
+  color:#888;
+}
+.empty-state svg{ width:46px; height:46px; opacity:.5; margin-bottom:6px; }
+.empty-state p{ margin:0; font-size:16px; }
+.empty-state .sub{ font-size:13.5px; opacity:.85; }
+
+.fab{
+  position:fixed;
+  right:22px;
+  bottom:26px;
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  background:var(--black);
+  color:var(--white);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 6px 16px rgba(0,0,0,0.25);
+  cursor:pointer;
+  border:none;
+}
+.fab svg{ width:22px; height:22px; }
+.fab[hidden]{ display:none; }
+/* Bulle flottante de téléversement */
+.upload-bubble {
+  position: fixed;
+  right: 22px;
+  bottom: 26px;
+  width: 250px;
+  background: var(--white);
+  border: 1.5px solid var(--black);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  overflow: hidden;
+
+  /* --- État masqué (par défaut) --- */
+  opacity: 0;
+  transform: translateY(20px) scale(0.95);
+  pointer-events: none; /* Empêche de cliquer dessus quand elle est invisible */
+  visibility: hidden;
+
+  /* Transition fluide (effet "pop" discret) */
+  transition: 
+    opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0.25s step-end;
+}
+
+/* --- État visible (quand on active la classe) --- */
+.upload-bubble.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+  visibility: visible;
+
+  /* Réinitialise la transition de visibility pour un affichage immédiat */
+  transition: 
+    opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+    visibility 0s;
+}
+.upload-bubble .close {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: var(--black, #000);
+  background: none;
+  cursor: pointer;
+  line-height: 1;
+
+  /* Bordure pointillée à gauche et en bas */
+  border: none;
+  border-left: 1.5px dashed var(--black, #000);
+  border-bottom: 1.5px dashed var(--black, #000);
+  
+  /* Arrondi en bas à gauche pour correspondre au style */
+  border-bottom-left-radius: 8px;
+}
+.upload-bubble h3{
+  font-weight:500;
+  font-size:17px;
+  margin:0 0 14px;
+  padding-right: 32px;
+}
+.dropzone{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  border:1.5px dashed #bbb;
+  border-radius:10px;
+  padding:20px 12px;
+  text-align:center;
+  color:#777;
+  font-size:13px;
+  cursor:pointer;
+}
+.dropzone svg{ width:22px; height:22px; margin-bottom:6px; color:var(--navy); }
+.dropzone strong{ color:var(--black); font-size:14px; margin-bottom:2px; }
+.filetypes{ font-size:11px; color:#999; margin-top:8px; }
+
+/* ===================== ECRAN 2 : CONFIGURATION ===================== */
+
+.config-top{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:24px 24px 18px;
+}
+.back-arrow{
+  font-size:19px;
+  color:#555;
+  background:none;
+  border:none;
+  cursor:pointer;
+  line-height:1;
+  padding:0;
+}
+.file-chip{ min-width:0; }
+.file-chip .name{
+  font-size:15px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  display:block;
+}
+.file-chip .size{ font-size:12.5px; color:#888; }
+
+.config-body{
+  flex:1;
+  padding:16px 24px 24px;
+}
+
+.field{ margin-bottom:34px; }
+.field label.title{
+  display:block;
+  font-size:16px;
+  margin-bottom:8px;
+}
+.field .desc{
+  font-size:13px;
+  color:#777;
+  margin:4px 0 0;
+  line-height:1.4;
+}
+
+textarea{
+  width:100%;
+  border:1.5px solid #ddd;
+  border-radius:10px;
+  background:transparent;
+  font-family:'Abel', sans-serif;
+  font-size:15px;
+  color:var(--black);
+  padding:10px 12px;
+  resize:vertical;
+  min-height:120px;
+}
+textarea::placeholder{ color:#aaa; }
+textarea:focus{ outline:none; border-color:var(--black); }
+
+.toggle-row{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  margin-bottom:30px;
+}
+.checkbox{
+  width:20px; height:20px;
+  border:1.5px solid #bbb;
+  border-radius:5px;
+  flex-shrink:0;
+  margin-top:2px;
+  position:relative;
+  background:none;
+  padding:0;
+  cursor:pointer;
+}
+.checkbox.checked{
+  background:var(--black);
+  border-color:var(--black);
+}
+.checkbox.checked::after{
+  content:'';
+  position:absolute;
+  left:6px; top:3px;
+  width:5px; height:9px;
+  border:solid var(--white);
+  border-width:0 2px 2px 0;
+  transform:rotate(40deg);
+}
+.toggle-text .title{ font-size:16px; margin:0 0 3px; }
+.toggle-text .desc{ font-size:13px; color:#777; margin:0; line-height:1.4; }
+
+.config-footer{
+  padding:16px 24px 26px;
+}
+.btn-primary{
+  width:100%;
+  background:var(--black);
+  color:var(--white);
+  border:none;
+  padding:15px;
+  border-radius:10px;
+  font-family:'Abel', sans-serif;
+  font-size:16px;
+  cursor:pointer;
+  letter-spacing:.02em;
+}
+
+/* ===================== ECRAN 3 : LECTURE ===================== */
+.read-top{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  padding:24px 24px 18px;
+}
+
+.read-content{
+  flex:1;
+  padding:6px 24px 40px;
+  overflow-y:auto;
+  font-size:16px;
+  line-height:1.6;
+}
+.read-content h1,
+.read-content h2,
+.read-content h3{
+  font-weight:550;
+  color:var(--black);
+  margin:28px 0 10px;
+}
+.read-content h1{ font-size:24px; }
+.read-content h2{ font-size:20px; }
+.read-content h3{ font-size:17px; }
+.read-content p{
+  margin:0 0 14px;
+}
+.read-content ul,
+.read-content ol{
+  margin:0 0 14px;
+  padding-left:22px;
+}
+.read-content li{ margin-bottom:6px; }
+.read-content strong{ color:var(--navy); }
+.read-content code{
+  background:#f4f4f4;
+  border-radius:4px;
+  padding:2px 5px;
+  font-size:14px;
+}
+.read-content blockquote{
+  border-left:3px solid var(--gold);
+  margin:0 0 14px;
+  padding:2px 0 2px 14px;
+  color:#666;
+}
+.read-content .loading,
+.read-content .error{
+  text-align:center;
+  color:#888;
+  margin-top:60px;
+}
+.read-content .error{ color:#b23b3b; }
+
+[hidden] {
+  display: none !important;
+}

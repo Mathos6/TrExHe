@@ -1,0 +1,48 @@
+// ===================== Lecture locale via OPFS =====================
+const screenRead = document.getElementById('screen-read');
+const readContent = document.getElementById('read-content');
+
+async function goToRead(filename) {
+  // 1. Basculer l'affichage
+  screenHome.classList.remove('active');
+  screenRead.classList.add('active');
+
+  readContent.innerHTML = '<p class="loading">Ouverture de la note...</p>';
+
+  try {
+    // 2. Accéder au répertoire racine privé de la PWA
+    const root = await navigator.storage.getDirectory();
+
+    // 3. Ouvrir le fichier Markdown (ex: "Biologie_moleculaire_ch4.md")
+    // Note: filename peut nécessiter d'ajuster l'extension si data-filename contient .mp3
+    const mdFileName = filename.replace(/\.[^/.]+$/, "") + ".md";
+    const fileHandle = await root.getFileHandle(mdFileName);
+    const file = await fileHandle.getFile();
+
+    // 4. Lire le contenu texte du fichier
+    const markdownText = await file.text();
+
+    // 5. Convertir et injecter le Markdown
+    readContent.innerHTML = marked.parse(markdownText);
+
+  } catch (error) {
+    readContent.innerHTML = '<p class="error">Impossible de lire ce fichier en local.</p>';
+    console.error("Erreur de lecture OPFS :", error);
+  }
+}
+
+
+
+// Fonction pour sauvegarder le Markdown reçu du serveur Go dans l'OPFS
+async function saveMarkdownLocally(filename, markdownContent) {
+  const root = await navigator.storage.getDirectory();
+
+  // Crée ou écrase le fichier .md
+  const fileHandle = await root.getFileHandle(filename, { create: true });
+  const writable = await fileHandle.createWritable();
+
+  await writable.write(markdownContent);
+  await writable.close();
+
+  console.log(`Fichier ${filename} sauvegardé en local !`);
+}
